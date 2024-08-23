@@ -1,6 +1,7 @@
 package vlc
 
 import (
+	"awesome-archiver/lib/compression/vlc/table/shannon_fano"
 	"reflect"
 	"testing"
 )
@@ -40,7 +41,10 @@ func Test_encodeBin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := encodeBin(tt.str); got != tt.want {
+			encoder := New(shannon_fano.NewGenerator())
+			tbl := encoder.tblGenerator.NewTable(tt.str)
+
+			if got := encodeBin(tt.str, tbl); got != tt.want {
 				t.Errorf("encodeBin() = %v, want %v", got, tt.want)
 			}
 		})
@@ -61,7 +65,7 @@ func TestEncode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			encoder := New()
+			encoder := New(shannon_fano.NewGenerator())
 
 			if got := encoder.Encode(tt.str); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Encode() = %v, want %v", got, tt.want)
@@ -84,7 +88,7 @@ func TestDecode(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			decoder := New()
+			decoder := New(shannon_fano.NewGenerator())
 
 			if got := decoder.Decode(tt.encodedText); got != tt.want {
 				t.Errorf("Decode() = %v, want %v", got, tt.want)
