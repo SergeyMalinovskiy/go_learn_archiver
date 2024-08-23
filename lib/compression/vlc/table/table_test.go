@@ -1,6 +1,7 @@
-package vlc
+package table
 
 import (
+	"awesome-archiver/lib/compression/vlc"
 	"reflect"
 	"testing"
 )
@@ -8,35 +9,35 @@ import (
 func Test_encodingTable_DecodingTree(t *testing.T) {
 	tests := []struct {
 		name string
-		et   encodingTable
-		want DecodingTree
+		et   vlc.encodingTable
+		want decodingTree
 	}{
 		{
 			name: "base tree test",
-			et: encodingTable{
+			et: vlc.encodingTable{
 				'a': "11",
 				'b': "1001",
 				'z': "0101",
 			},
-			want: DecodingTree{
-				Zero: &DecodingTree{
-					One: &DecodingTree{
-						Zero: &DecodingTree{
-							One: &DecodingTree{
+			want: decodingTree{
+				Zero: &decodingTree{
+					One: &decodingTree{
+						Zero: &decodingTree{
+							One: &decodingTree{
 								Value: "z",
 							},
 						},
 					},
 				},
-				One: &DecodingTree{
-					Zero: &DecodingTree{
-						Zero: &DecodingTree{
-							One: &DecodingTree{
+				One: &decodingTree{
+					Zero: &decodingTree{
+						Zero: &decodingTree{
+							One: &decodingTree{
 								Value: "b",
 							},
 						},
 					},
-					One: &DecodingTree{
+					One: &decodingTree{
 						Value: "a",
 					},
 				},
@@ -46,7 +47,7 @@ func Test_encodingTable_DecodingTree(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := tt.et.DecodingTree(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("DecodingTree() = %v, want %v", got, tt.want)
+				t.Errorf("decodingTree() = %v, want %v", got, tt.want)
 			}
 		})
 	}
